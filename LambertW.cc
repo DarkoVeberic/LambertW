@@ -1,7 +1,5 @@
-//#include <iostream>
 #include <cmath>
 #include "Horner.h"
-//#include "LambertW.h"
 
 using namespace std;
 
