@@ -14,6 +14,12 @@ The work is described in the following publications:
 
 
 
+## License
+
+Released under dual licence: the GPL version 2 and the two-clause BSD license.
+
+
+
 ## Under construction!
 
 Stay tuned...
