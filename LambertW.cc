@@ -3,14 +3,6 @@
 
 using namespace std;
 
-#if 1
-#  define NAMESPACE_UTL_BEGIN namespace utl {
-#  define NAMESPACE_UTL_END }
-#else
-#  define NAMESPACE_UTL_BEGIN
-#  define NAMESPACE_UTL_END
-#endif
-
 // fork macro to keep the tree balanced
 #define Y2(d1, c12, d2) \
   ((c12) ? (d1) : (d2))
@@ -26,7 +18,7 @@ using namespace std;
   Y6(d1, c12, d2, c23, Y2(d3, c34, d4), c45, d5, c56, d6, c67, d7)
 
 
-NAMESPACE_UTL_BEGIN
+namespace utl {
 
   class BranchPoint { };
   HORNER_COEFF(BranchPoint,  0, -1);
@@ -320,4 +312,4 @@ NAMESPACE_UTL_BEGIN
   template double LambertW<0>(const double x);
   template double LambertW<-1>(const double x);
 
-NAMESPACE_UTL_END
+}

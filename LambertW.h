@@ -6,11 +6,9 @@
 
 namespace utl {
 
-  /*template<int branch>
-  double LambertWApproximation(const double x);*/
-
   template<int branch>
   double LambertW(const double x);
+
 
   inline
   double
