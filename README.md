@@ -24,7 +24,7 @@ Scientific or technical publications resulting from projects using this code are
 
 ## Usage
 
-All the relevant code is placed into an **utl** namespace.
+All the relevant code is placed into an <tt>utl</tt> namespace.
 
 The two branches (0 and -1) of the Lambert function can be specified as template parameters, e.g.
 ```C++
