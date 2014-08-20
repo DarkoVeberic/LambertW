@@ -18,8 +18,20 @@ The work is described in the following publications:
 
 Released under dual licence: the GPL version 2 and the two-clause BSD license.
 
+Scientific or technical publications resulting from projects using this code are required to add the [Comp. Phys. Comm. **183** (2012) 2622-2628](http://dx.doi.org/10.1016/j.cpc.2012.07.008) citation into their references.
 
 
-## Under construction!
 
-Stay tuned...
+## Usage
+
+All the relevant code is placed into an **utl** namespace.
+
+The two branches (0 and -1) of the Lambert function can be specified as template parameters, e.g.
+```C++
+const double w = utl::LambertW<-1>(x);
+
+```
+or as normal parameters
+```C++
+const double w = utl::Lambert(-1, x);
+```
