@@ -29,7 +29,6 @@ All the relevant code is placed into an `utl` namespace.
 The two branches (0 and -1) of the Lambert function can be specified as template parameters, e.g.
 ```C++
 const double w = utl::LambertW<-1>(x);
-
 ```
 or as normal parameters
 ```C++
