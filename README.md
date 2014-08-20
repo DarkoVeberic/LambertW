@@ -18,7 +18,7 @@ The work is described in the following publications:
 
 Released under dual licence: the GPL version 2 and the two-clause BSD license.
 
-Scientific or technical publications resulting from projects using this code are required to add the [Comp. Phys. Comm. **183** (2012) 2622-2628](http://dx.doi.org/10.1016/j.cpc.2012.07.008) citation into their references.
+Scientific or technical publications resulting from projects using this code are required to add the [Comp. Phys. Comm. **183** (2012) 2622-2628](http://dx.doi.org/10.1016/j.cpc.2012.07.008) citation among their references.
 
 
 
