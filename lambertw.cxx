@@ -46,19 +46,35 @@
 */
 
 #include <LambertW.h>
+#include <FukushimaLambertW.h>
+#include <FukushimaOrigLambertW.h>
 #include <iostream>
 #include <iomanip>
-#include <sstream>
+#include <unistd.h>
 #include <stdlib.h>
 
 using namespace std;
 
 
 void
-Usage(const int argc, const char* const name)
+Usage(const char* const argv[], const int argc = 0, const int index = -1)
 {
-  cout << "Usage: " << name << " [branch] x\n"
-          "You gave " << argc << " parameters." << endl;
+  cout << "Usage: " << argv[0] << " [-f || -F] [-p #] [branch] x" << endl;
+  if (argc) {
+    int len = 0;
+    string line;
+    for (int i = 0; i < argc; ++i) {
+      line += argv[i];
+      if (i == index-1)
+        len = line.length();
+      line += ' ';
+    }
+    if (argc == index)
+      len = line.length() - 1;
+    cout << "Your input:\n"
+         << line << '\n'
+         << string(len, ' ') << '^' << endl;
+  }
   exit(1);
 }
 
@@ -66,33 +82,69 @@ Usage(const int argc, const char* const name)
 int
 main(int argc, char* argv[])
 {
+  enum EVariant {
+    eVeberic = 0,
+    eFukushima,
+    eFukushimaOrig
+  };
+
+  EVariant variant = eVeberic;
+  int precision = 20;
   int branch = 0;
   double x = 0;
 
-  switch (argc) {
-  case 3:
-    {
-      stringstream ss;
-      ss << argv[argc-2];
-      if (!(ss >> branch) || !(branch == -1 || branch == 0))
-        Usage(argc, argv[0]);
+  opterr = 0;
+  int c;
+  while ((c = getopt(argc, argv, "fFp:")) != -1) {
+    switch (c) {
+    case 'f':
+      if (variant == eVeberic)
+        variant = eFukushima;
+      else
+        Usage(argv, argc, optind);
+      break;
+    case 'F':
+      if (variant == eVeberic)
+        variant = eFukushimaOrig;
+      else
+        Usage(argv, argc, optind);
+      break;
+    case 'p':
+      precision = atoi(optarg);
+      if (precision < 1 || precision > 30)
+        Usage(argv, argc, optind);
+      break;
+    default:
+      Usage(argv, argc, optind);
+      break;
     }
+  }
+  switch (argc - optind) {
   case 2:
-    {
-      stringstream ss;
-      ss << argv[argc-1];
-      if (!(ss >> x))
-        Usage(argc, argv[0]);
-    }
+    branch = atoi(argv[argc - 2]);
+    if (!(branch == -1 || branch == 0))
+      Usage(argv, argc, optind+1);
+  case 1:
+    x = atof(argv[argc - 1]);
     break;
   default:
-    Usage(argc, argv[0]);
+    Usage(argv, argc, argc-1);
     break;
   }
 
-  cout << setprecision(16)
-       << utl::LambertW(branch, x)
-       << endl;
+  cout << setprecision(precision);
+  switch (variant) {
+  case eVeberic:
+    cout << utl::LambertW(branch, x);
+    break;
+  case eFukushima:
+   cout << Fukushima::LambertW(branch, x);
+   break;
+  case eFukushimaOrig:
+    cout << FukushimaOrig::LambertW(branch, x);
+    break;
+  }
+  cout << endl;
 
-  return 0;
+  return EXIT_SUCCESS;
 }

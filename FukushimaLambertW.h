@@ -1,7 +1,7 @@
 /*
-  Implementation of the Lambert W function
+  Implementation of the Fukushima method for the Lambert W function
 
-  Copyright (C) 2011 Darko Veberic, darko.veberic@ijs.si
+  Copyright (C) 2015 Darko Veberic, darko.veberic@ijs.si
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -17,25 +17,30 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _utl_LambertW_h_
-#define _utl_LambertW_h_
+/*
+  This code is based on the following publication and its author's fortran code:
+  Toshio Fukushima, "Precise and fast computation of Lambert W-functions without
+  transcendental function evaluations", J. Comp. Appl. Math. 244 (2013) 77-89.
+*/
+
+#ifndef _FukushimaLambertW_h_
+#define _FukushimaLambertW_h_
 
 #include <limits>
 
 
-namespace utl {
+namespace Fukushima {
 
-  template<int branch>
-  double LambertW(const double x);
-
+  template<typename T> T LambertW0(const T x);
+  template<typename T> T LambertWm1(const T x);
 
   inline
   double
   LambertW(const int branch, const double x)
   {
     switch (branch) {
-    case -1: return LambertW<-1>(x);
-    case  0: return LambertW<0>(x);
+    case -1: return LambertWm1(x);
+    case  0: return LambertW0(x);
     default: return std::numeric_limits<double>::quiet_NaN();
     }
   }
