@@ -47,9 +47,9 @@
 
 #include <LambertW.h>
 #include <FukushimaLambertW.h>
-#include <FukushimaOrigLambertW.h>
 #include <iostream>
 #include <iomanip>
+#include <cmath>
 #include <unistd.h>
 #include <stdlib.h>
 
@@ -59,7 +59,7 @@ using namespace std;
 void
 Usage(const char* const argv[], const int argc = 0, const int index = -1)
 {
-  cout << "Usage: " << argv[0] << " [-f || -F] [-p #] [branch] x" << endl;
+  cout << "Usage: " << argv[0] << " [-f] [-p #] [-b #] -x #" << endl;
   if (argc) {
     int len = 0;
     string line;
@@ -84,28 +84,21 @@ main(int argc, char* argv[])
 {
   enum EVariant {
     eVeberic = 0,
-    eFukushima,
-    eFukushimaOrig
+    eFukushima
   };
 
   EVariant variant = eVeberic;
   int precision = 20;
   int branch = 0;
-  double x = 0;
+  double x = -1;
 
   opterr = 0;
   int c;
-  while ((c = getopt(argc, argv, "fFp:")) != -1) {
+  while ((c = getopt(argc, argv, "fp:b:x:")) != -1) {
     switch (c) {
     case 'f':
       if (variant == eVeberic)
         variant = eFukushima;
-      else
-        Usage(argv, argc, optind);
-      break;
-    case 'F':
-      if (variant == eVeberic)
-        variant = eFukushimaOrig;
       else
         Usage(argv, argc, optind);
       break;
@@ -114,23 +107,22 @@ main(int argc, char* argv[])
       if (precision < 1 || precision > 30)
         Usage(argv, argc, optind);
       break;
+    case 'b':
+      branch = atoi(optarg);
+      if (!(branch == -1 || branch == 0))
+        Usage(argv, argc, optind);
+      break;
+    case 'x':
+      x = atof(optarg);
+      break;
     default:
       Usage(argv, argc, optind);
       break;
     }
   }
-  switch (argc - optind) {
-  case 2:
-    branch = atoi(argv[argc - 2]);
-    if (!(branch == -1 || branch == 0))
-      Usage(argv, argc, optind+1);
-  case 1:
-    x = atof(argv[argc - 1]);
-    break;
-  default:
-    Usage(argv, argc, argc-1);
-    break;
-  }
+
+  if (x < -1/M_E || (branch == -1 && x > 0))
+    Usage(argv, argc, argc);
 
   cout << setprecision(precision);
   switch (variant) {
@@ -140,9 +132,6 @@ main(int argc, char* argv[])
   case eFukushima:
    cout << Fukushima::LambertW(branch, x);
    break;
-  case eFukushimaOrig:
-    cout << FukushimaOrig::LambertW(branch, x);
-    break;
   }
   cout << endl;
 
