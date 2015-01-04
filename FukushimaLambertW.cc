@@ -137,29 +137,42 @@ namespace Fukushima {
   }
 
 
-  template<typename T>
-  T
-  LambertW0(const T z)
+  inline
+  double
+  FinalResult(const double w, const double y)
   {
-    static T em[66];
-    static T g[65];
-    static T a[12];
-    static T b[12];
-    static const T e1 = M_E;
-    static const T em1 = 1 / e1;
+    const double f0 = w - y;
+    const double f1 = 1 + y;
+    const double f00 = f0 * f0;
+    const double f11 = f1 * f1;
+    const double f0y = f0 * y;
+    return w - 4 * f0 * (6 * f1 * (f11 + f0y) + f00 * y) /
+                        (f11 * (24 * f11 + 36 * f0y) +
+                         f00 * (6 * y * y + 8 * f1 * y + f0y));
+  }
 
-    if (!em[0]) {
-      em[0] = e1;
-      T ej = 1;
-      em[1] = 1;
+
+  double
+  LambertW0(const double z)
+  {
+    static double e[66];
+    static double g[65];
+    static double a[12];
+    static double b[12];
+
+    if (!e[0]) {
+      const double e1 = 1 / M_E;
+      double ej = 1;
+      e[0] = M_E;
+      e[1] = 1;
       g[0] = 0;
       for (int j = 1, jj = 2; jj < 66; ++jj) {
-        ej *= e1;
-        em[jj] = em[j] * em1;
+        ej *= M_E;
+        e[jj] = e[j] * e1;
         g[j] = j * ej;
         j = jj;
       }
-      a[0] = sqrt(em1);
+      a[0] = sqrt(e1);
       b[0] = 0.5;
       for (int j = 0, jj = 1; jj < 12; ++jj) {
         a[jj] = sqrt(a[j]);
@@ -170,13 +183,13 @@ namespace Fukushima {
     if (abs(z) < 0.05)
       return LambertW0ZeroSeries(z);
     if (z < -0.35) {
-      const T p2 = 2 * (e1 * z + 1);
+      const double p2 = 2 * (M_E * z + 1);
       if (p2 > 0)
         return LambertWSeries(sqrt(p2));
       if (p2 == 0)
         return -1;
       cerr << "(lambertw0) Argument out of range. z=" << z << endl;
-      return numeric_limits<T>::quiet_NaN();
+      return numeric_limits<double>::quiet_NaN();
     }
     int n;
     for (n = 0; n <= 2; ++n)
@@ -189,7 +202,7 @@ namespace Fukushima {
         goto line2;
     }
     cerr << "(lambertw0) Argument too large. z=" << z << endl;
-    return numeric_limits<T>::quiet_NaN();
+    return numeric_limits<double>::quiet_NaN();
   line2:
     {
       int nh = n / 2;
@@ -203,8 +216,6 @@ namespace Fukushima {
     }
   line1:
     --n;
-    T y = z * em[n+1];
-    T w = n;
     int jmax = 8;
     if (z <= -0.36)
       jmax = 12;
@@ -214,47 +225,40 @@ namespace Fukushima {
       jmax = 10;
     else if (n <= 1)
       jmax = 9;
+    double y = z * e[n+1];
+    double w = n;
     for (int j = 0; j < jmax; ++j) {
-      const T wj = w + b[j];
-      const T yj = y * a[j];
+      const double wj = w + b[j];
+      const double yj = y * a[j];
       if (wj < yj) {
         w = wj;
         y = yj;
       }
     }
-    const T f0 = w - y;
-    const T f1 = 1 + y;
-    const T f00 = f0 * f0;
-    const T f11 = f1 * f1;
-    const T f0y = f0 * y;
-    return w - 4 * f0 * (6 * f1 * (f11 + f0y) + f00 * y) /
-                        (f11 * (24 * f11 + 36 * f0y) +
-                         f00 * (6 * y * y + 8 * f1 * y + f0y));
+    return FinalResult(w, y);
   }
 
 
-  template<typename T>
-  T
-  LambertWm1(const T z)
+  double
+  LambertWm1(const double z)
   {
-    static T e[64];
-    static T g[64];
-    static T a[12];
-    static T b[12];
-    static const T e1 = M_E;
-    static const T em1 = 1 / e1;
+    static double e[64];
+    static double g[64];
+    static double a[12];
+    static double b[12];
 
     if (!e[0]) {
-      T emj = em1;
-      e[0] = e1;
-      g[0] = -em1;
+      const double e1 = 1 / M_E;
+      double ej = e1;
+      e[0] = M_E;
+      g[0] = -e1;
       for (int j = 0, jj = 1; jj < 64; ++jj) {
-        emj *= em1;
-        e[jj] = e[j] * e1;
-        g[jj] = -(jj+1) * emj;
+        ej *= e1;
+        e[jj] = e[j] * M_E;
+        g[jj] = -(jj+1) * ej;
         j = jj;
       }
-      a[0] = sqrt(e1);
+      a[0] = sqrt(M_E);
       b[0] = 0.5;
       for (int j = 0, jj = 1; jj < 12; ++jj) {
         a[jj] = sqrt(a[j]);
@@ -264,16 +268,16 @@ namespace Fukushima {
     }
     if (z >= 0) {
       cerr << "(lambertwm1) Argument out of range. z=" << z << endl;
-      return numeric_limits<T>::quiet_NaN();
+      return numeric_limits<double>::quiet_NaN();
     }
     if (z < -0.35) {
-      const T p2 = 2 * (e1 * z + 1);
+      const double p2 = 2 * (M_E * z + 1);
       if (p2 > 0)
         return LambertWSeries(-sqrt(p2));
       if (p2 == 0)
         return -1;
       cerr << "(lambertwm1) Argument out of range. z=" << z << endl;
-      return numeric_limits<T>::quiet_NaN();
+      return numeric_limits<double>::quiet_NaN();
     }
     int n = 2;
     if (g[n - 1] > z)
@@ -284,7 +288,7 @@ namespace Fukushima {
         goto line2;
     }
     cerr << "(lambertwm1) Argument too small. z=" << z << endl;
-    return numeric_limits<T>::quiet_NaN();
+    return numeric_limits<double>::quiet_NaN();
   line2:
     {
       int nh = n / 2;
@@ -298,8 +302,6 @@ namespace Fukushima {
     }
   line1:
     --n;
-    T w = -n;
-    T y = z * e[n - 1];
     int jmax = 11;
     if (n >= 8)
       jmax = 8;
@@ -307,29 +309,17 @@ namespace Fukushima {
       jmax = 9;
     else if (n >= 2)
       jmax = 10;
+    double w = -n;
+    double y = z * e[n - 1];
     for (int j = 0; j < jmax; ++j) {
-      const T wj = w - b[j];
-      const T yj = y * a[j];
+      const double wj = w - b[j];
+      const double yj = y * a[j];
       if (wj < yj) {
         w = wj;
         y = yj;
       }
     }
-    const T f0 = w - y;
-    const T f1 = 1 + y;
-    const T f00 = f0 * f0;
-    const T f11 = f1 * f1;
-    const T f0y = f0 * y;
-    return w - 4 * f0 * (6 * f1 * (f11 + f0y) + f00 * y) /
-                        (f11 * (24 * f11 + 36 * f0y) +
-                         f00 * (6 * y * y + 8 * f1 * y + f0y));
+    return FinalResult(w, y);
   }
-
-
-  // instantiations
-  template double LambertW0(const double z);
-  template long double LambertW0(const long double z);
-  template double LambertWm1(const double z);
-  template long double LambertWm1(const long double z);
 
 }

@@ -31,8 +31,10 @@
 
 namespace Fukushima {
 
-  template<typename T> T LambertW0(const T x);
-  template<typename T> T LambertWm1(const T x);
+  double LambertW0(const double x);
+
+  double LambertWm1(const double x);
+
 
   inline
   double
