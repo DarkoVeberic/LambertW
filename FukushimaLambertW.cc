@@ -141,13 +141,11 @@ namespace Fukushima {
   T
   LambertW0(const T z)
   {
-    // size: last+1 - (first)
-    // addressing: index -> index - (first)
     static T em[66];
     static T g[65];
     static T a[12];
     static T b[12];
-    static const T e1 = M_E; //2.718281828459045235;
+    static const T e1 = M_E;
     static const T em1 = 1 / e1;
 
     if (!em[0]) {
@@ -180,7 +178,6 @@ namespace Fukushima {
       cerr << "(lambertw0) Argument out of range. z=" << z << endl;
       return numeric_limits<T>::quiet_NaN();
     }
-    int nh = 0;
     int n;
     for (n = 0; n <= 2; ++n)
       if (g[n] > z)
@@ -191,16 +188,18 @@ namespace Fukushima {
       if (g[n] > z)
         goto line2;
     }
-    cerr << "(lambertw0) Too large argument. z=" << z << endl;
+    cerr << "(lambertw0) Argument too large. z=" << z << endl;
     return numeric_limits<T>::quiet_NaN();
   line2:
-    nh = n / 2;
-    for (int j = 1; j <= 5; ++j) {
-      nh /= 2;
-      if (nh <= 0)
-        break;
-      if (g[n-nh] > z)
-        n -= nh;
+    {
+      int nh = n / 2;
+      for (int j = 1; j <= 5; ++j) {
+        nh /= 2;
+        if (nh <= 0)
+          break;
+        if (g[n-nh] > z)
+          n -= nh;
+      }
     }
   line1:
     --n;
@@ -228,7 +227,9 @@ namespace Fukushima {
     const T f00 = f0 * f0;
     const T f11 = f1 * f1;
     const T f0y = f0 * y;
-    return w - 4 * f0 * (6 * f1 * (f11 + f0y) + f00 * y) / (f11 * (24 * f11 + 36 * f0y) + f00 * (6 * y * y + 8 * f1 * y + f0y));
+    return w - 4 * f0 * (6 * f1 * (f11 + f0y) + f00 * y) /
+                        (f11 * (24 * f11 + 36 * f0y) +
+                         f00 * (6 * y * y + 8 * f1 * y + f0y));
   }
 
 
@@ -240,7 +241,7 @@ namespace Fukushima {
     static T g[64];
     static T a[12];
     static T b[12];
-    static const T e1 = M_E; //2.718281828459045235;
+    static const T e1 = M_E;
     static const T em1 = 1 / e1;
 
     if (!e[0]) {
@@ -274,7 +275,6 @@ namespace Fukushima {
       cerr << "(lambertwm1) Argument out of range. z=" << z << endl;
       return numeric_limits<T>::quiet_NaN();
     }
-    int nh = 0;
     int n = 2;
     if (g[n - 1] > z)
       goto line1;
@@ -283,16 +283,18 @@ namespace Fukushima {
       if (g[n - 1] > z)
         goto line2;
     }
-    cerr << "(lambertwm1) Too small argument. z=" << z << endl;
+    cerr << "(lambertwm1) Argument too small. z=" << z << endl;
     return numeric_limits<T>::quiet_NaN();
   line2:
-    nh = n / 2;
-    for (int j = 1; j <= 5; ++j) {
-      nh /= 2;
-      if (nh <= 0)
-        break;
-      if (g[n-nh - 1] > z)
-        n -= nh;
+    {
+      int nh = n / 2;
+      for (int j = 1; j <= 5; ++j) {
+        nh /= 2;
+        if (nh <= 0)
+          break;
+        if (g[n-nh - 1] > z)
+          n -= nh;
+      }
     }
   line1:
     --n;
@@ -318,7 +320,9 @@ namespace Fukushima {
     const T f00 = f0 * f0;
     const T f11 = f1 * f1;
     const T f0y = f0 * y;
-    return w - 4 * f0 * (6 * f1 * (f11 + f0y) + f00 * y) / (f11 * (24 * f11 + 36 * f0y) + f00 * (6 * y * y + 8 * f1 * y + f0y));
+    return w - 4 * f0 * (6 * f1 * (f11 + f0y) + f00 * y) /
+                        (f11 * (24 * f11 + 36 * f0y) +
+                         f00 * (6 * y * y + 8 * f1 * y + f0y));
   }
 
 
