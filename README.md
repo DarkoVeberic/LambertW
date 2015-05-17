@@ -12,6 +12,7 @@ The work is described in the following publications:
 * [arXiv:1003.1628](http://arxiv.org/abs/1003.1628)
 * [arXiv:1209.0735](http://arxiv.org/abs/1209.0735) and [Comp. Phys. Comm. **183** (2012) 2622-2628](http://dx.doi.org/10.1016/j.cpc.2012.07.008)
 
+This is currently the fastest known implementation of the Lambert W function on the planet.
 
 
 ## License
