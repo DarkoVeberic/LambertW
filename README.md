@@ -33,5 +33,5 @@ const double w = utl::LambertW<-1>(x);
 ```
 or as normal parameters
 ```C++
-const double w = utl::Lambert(-1, x);
+const double w = utl::LambertW(-1, x);
 ```
