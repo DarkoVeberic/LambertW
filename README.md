@@ -19,7 +19,7 @@ This is currently the fastest known implementation of the Lambert W function on 
 
 Released under dual licence: the GPL version 2 and the two-clause BSD license.
 
-Scientific or technical publications resulting from projects using this code are required to add the [Comp. Phys. Comm. **183** (2012) 2622-2628](http://dx.doi.org/10.1016/j.cpc.2012.07.008) citation among their references.
+Scientific or technical publications resulting from projects using this code are kindly requested to add the [Comp. Phys. Comm. **183** (2012) 2622-2628](http://dx.doi.org/10.1016/j.cpc.2012.07.008) citation among their references.
 
 
 
